@@ -3,39 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product;
+use App\Models\Order;
 
-class ProductsController extends Controller
+class OrdersController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct(){
+        $this->middleware('auth');
+    }
+
+
     public function index()
     {
-        $products = Product::paginate(12);
-        
-        return view('admin.product-data', [
-            'products' => $products
-        ]);
-    }
+        $order = Order::all();
 
-    public function index_one()
-    {
-        $product = Product::paginate(12);
-        
-        return view('ourproducts', [
-            'product' => $product
-        ]);
-    }
-
-    public function single_p($id)
-    {
-        $product = Product::find($id);
-        
-        return view('shop.product', [
-            'product' => $product
+        return view('admin.orders', [
+            'order' => $order
         ]);
     }
 
@@ -46,7 +33,7 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        return view('admin.add-products');
+        //
     }
 
     /**
@@ -57,27 +44,16 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        
-        // dd($request);
-        
-        $product = new Product;
-        $product->Product_name= $request->input('product-name');
-        $product->Category = $request->input('category');
-        $product->Price = $request->input('price');
-
-        if ($request->hasFile('image')) {
-            $destination_path = "public/images/products";
-            $image_name = $request->file('image')->getClientOriginalName();
-            $request->file('image')->storeAs($destination_path, $image_name);
-
-            $product->Image_name = $image_name;
-        }
-
-
-        // $product->Image_name = $request->input('image_name');
-        $product->save();
-
-        return back()->with('success', 'Product added');
+        $order = new Order;
+        $order->Product_name = $request->input('product-name');
+        $order->Price = $request->input('price');
+        $order->Quantity = $request->input('quantity');
+        $order->Totals = $request->input('totals');
+        $order->Coupon_code = $request->input('code');
+        $order->Country = $request->input('country');
+        $order->State = $request->input('state');
+        $order->Postal_code = $request->input('postal_code');
+        $order->save();
     }
 
     /**
@@ -88,8 +64,13 @@ class ProductsController extends Controller
      */
     public function show($id)
     {
-        return view('admin.products');
+        $order = Order::find($id);
+
+        return view('admin.ordershow', [
+            'order' => $order
+        ]);
     }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -122,5 +103,14 @@ class ProductsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function updateStat($id)
+    {
+        $order = Order::find($id);
+
+        $order->update(['status' => 1]);
+
+        return redirect()->route('show-orders', $id);
     }
 }

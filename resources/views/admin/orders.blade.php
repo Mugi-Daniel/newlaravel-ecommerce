@@ -12,79 +12,37 @@
                         <table class="table table-borderless table-striped table-earning">
                             <thead>
                                 <tr>
-                                    <th>date</th>
-                                    <th>order ID</th>
-                                    <th>name</th>
-                                    <th class="text-right">price</th>
-                                    <th class="text-right">quantity</th>
-                                    <th class="text-right">total</th>
+                                    <th>Product Name</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Country</th>
+                                    <th>State</th>
+                                    <th>Totals</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($order as $item)
                                 <tr>
-                                    <td>2018-09-29 05:57</td>
-                                    <td>100398</td>
-                                    <td>iPhone X 64Gb Grey</td>
-                                    <td class="text-right">$999.00</td>
-                                    <td class="text-right">1</td>
-                                    <td class="text-right">$999.00</td>
+                                    <td>{{ $item->Product_name }}</td>
+                                    <td>{{ $item->Price }}</td>
+                                    <td>{{ $item->Quantity }}</td>
+                                    <td>{{ $item->Country }}</td>
+                                    <td>{{ $item->State }}</td>
+                                    <td>{{ $item->Totals }}</td>
+                                    <td>{{ $item->created_at }}</td>
+                                    <td>
+                                        @if($item->status === 0)
+                                        <form action="{{ route('update-order-status', $item->id) }}" method="post" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary">Confirm</button>
+                                        </form>
+                                        @endif
+                                        <a class="btn btn-success" href="{{ route('show-orders', $item->id) }}">View</a>
+                                    </td>
                                 </tr>
-                                <tr>
-                                    <td>2018-09-28 01:22</td>
-                                    <td>100397</td>
-                                    <td>Samsung S8 Black</td>
-                                    <td class="text-right">$756.00</td>
-                                    <td class="text-right">1</td>
-                                    <td class="text-right">$756.00</td>
-                                </tr>
-                                <tr>
-                                    <td>2018-09-27 02:12</td>
-                                    <td>100396</td>
-                                    <td>Game Console Controller</td>
-                                    <td class="text-right">$22.00</td>
-                                    <td class="text-right">2</td>
-                                    <td class="text-right">$44.00</td>
-                                </tr>
-                                <tr>
-                                    <td>2018-09-26 23:06</td>
-                                    <td>100395</td>
-                                    <td>iPhone X 256Gb Black</td>
-                                    <td class="text-right">$1199.00</td>
-                                    <td class="text-right">1</td>
-                                    <td class="text-right">$1199.00</td>
-                                </tr>
-                                <tr>
-                                    <td>2018-09-25 19:03</td>
-                                    <td>100393</td>
-                                    <td>USB 3.0 Cable</td>
-                                    <td class="text-right">$10.00</td>
-                                    <td class="text-right">3</td>
-                                    <td class="text-right">$30.00</td>
-                                </tr>
-                                <tr>
-                                    <td>2018-09-29 05:57</td>
-                                    <td>100392</td>
-                                    <td>Smartwatch 4.0 LTE Wifi</td>
-                                    <td class="text-right">$199.00</td>
-                                    <td class="text-right">6</td>
-                                    <td class="text-right">$1494.00</td>
-                                </tr>
-                                <tr>
-                                    <td>2018-09-24 19:10</td>
-                                    <td>100391</td>
-                                    <td>Camera C430W 4k</td>
-                                    <td class="text-right">$699.00</td>
-                                    <td class="text-right">1</td>
-                                    <td class="text-right">$699.00</td>
-                                </tr>
-                                <tr>
-                                    <td>2018-09-22 00:43</td>
-                                    <td>100393</td>
-                                    <td>USB 3.0 Cable</td>
-                                    <td class="text-right">$10.00</td>
-                                    <td class="text-right">3</td>
-                                    <td class="text-right">$30.00</td>
-                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

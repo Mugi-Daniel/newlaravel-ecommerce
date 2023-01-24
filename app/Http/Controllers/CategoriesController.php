@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product;
+Use App\Models\Category;
 
-class ProductsController extends Controller
+class CategoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,28 +14,9 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products = Product::paginate(12);
-        
-        return view('admin.product-data', [
-            'products' => $products
-        ]);
-    }
-
-    public function index_one()
-    {
-        $product = Product::paginate(12);
-        
-        return view('ourproducts', [
-            'product' => $product
-        ]);
-    }
-
-    public function single_p($id)
-    {
-        $product = Product::find($id);
-        
-        return view('shop.product', [
-            'product' => $product
+        $categories = Category::all();
+        return view('admin.categories', [
+            'categories' => $categories
         ]);
     }
 
@@ -46,7 +27,7 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        return view('admin.add-products');
+        return view('admin.add-categories');
     }
 
     /**
@@ -57,27 +38,11 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        
-        // dd($request);
-        
-        $product = new Product;
-        $product->Product_name= $request->input('product-name');
-        $product->Category = $request->input('category');
-        $product->Price = $request->input('price');
+        $category = new Category;
+        $category->Category_name= $request->input('category-name');
+        $category->save();
 
-        if ($request->hasFile('image')) {
-            $destination_path = "public/images/products";
-            $image_name = $request->file('image')->getClientOriginalName();
-            $request->file('image')->storeAs($destination_path, $image_name);
-
-            $product->Image_name = $image_name;
-        }
-
-
-        // $product->Image_name = $request->input('image_name');
-        $product->save();
-
-        return back()->with('success', 'Product added');
+        return back()->with('success', 'Category Added Successfully');
     }
 
     /**
@@ -88,8 +53,9 @@ class ProductsController extends Controller
      */
     public function show($id)
     {
-        return view('admin.products');
+        //
     }
+
     /**
      * Show the form for editing the specified resource.
      *

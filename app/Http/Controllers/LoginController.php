@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
-class ProductsController extends Controller
+class LoginController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,29 +16,26 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products = Product::paginate(12);
-        
-        return view('admin.product-data', [
-            'products' => $products
-        ]);
+        return view('admin.login');
     }
 
-    public function index_one()
-    {
-        $product = Product::paginate(12);
-        
-        return view('ourproducts', [
-            'product' => $product
-        ]);
-    }
 
-    public function single_p($id)
+    public function login(Request $request)
     {
-        $product = Product::find($id);
-        
-        return view('shop.product', [
-            'product' => $product
+        // Validation
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required'
         ]);
+
+        // Sign in user
+        if(! Auth::attempt($request->only('email', 'password'), $request->remember))
+        {
+            return back()->with('error', 'Invalid login credentials');
+        }
+        $request->session()->regenerate();
+        
+        return redirect()->route('dashboard');
     }
 
     /**
@@ -44,9 +43,10 @@ class ProductsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('admin.add-products');
+        return view('admin.add-user');
+        
     }
 
     /**
@@ -58,26 +58,14 @@ class ProductsController extends Controller
     public function store(Request $request)
     {
         
-        // dd($request);
-        
-        $product = new Product;
-        $product->Product_name= $request->input('product-name');
-        $product->Category = $request->input('category');
-        $product->Price = $request->input('price');
-
-        if ($request->hasFile('image')) {
-            $destination_path = "public/images/products";
-            $image_name = $request->file('image')->getClientOriginalName();
-            $request->file('image')->storeAs($destination_path, $image_name);
-
-            $product->Image_name = $image_name;
-        }
-
-
-        // $product->Image_name = $request->input('image_name');
-        $product->save();
-
-        return back()->with('success', 'Product added');
+        $user = new User;
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->phone = $request->input('phone');
+        $user->password = Hash::make($request->input('password'));
+        $user->save();
+         
+        return back()->with('success', 'User Added Successfully');
     }
 
     /**
@@ -88,8 +76,9 @@ class ProductsController extends Controller
      */
     public function show($id)
     {
-        return view('admin.products');
+        //
     }
+
     /**
      * Show the form for editing the specified resource.
      *

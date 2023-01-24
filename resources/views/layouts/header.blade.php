@@ -159,8 +159,12 @@
                                     </div>
                                 </div>
                                 <div class="account-dropdown__footer">
-                                    <a href="#">
-                                        <i class="zmdi zmdi-power"></i>Logout</a>
+                                    <form action="{{ route('logout') }}" method="post">
+                                        @csrf
+                                        <button type="submit" class="form-control"><i class="zmdi zmdi-power"></i>Logout</button>
+                                    </form>
+                                    {{-- <a href="#">
+                                        <i class="zmdi zmdi-power"></i>Logout</a> --}}
                                 </div>
                             </div>
                         </div>

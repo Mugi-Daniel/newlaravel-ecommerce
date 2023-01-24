@@ -62,8 +62,7 @@
 	          <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
               <div class="dropdown-menu" aria-labelledby="dropdown04">
-              	<a class="dropdown-item" href="products">Shop</a>
-                <a class="dropdown-item" href="product">Single Product</a>
+              	<a class="dropdown-item" href="{{ route('our-products') }}">Our Products</a>
                 <a class="dropdown-item" href="cart">Cart</a>
                 <a class="dropdown-item" href="checkout">Checkout</a>
               </div>
